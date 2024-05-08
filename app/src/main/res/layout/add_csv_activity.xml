@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <Button
+        android:layout_marginRight="15dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnViewSDCard"
+        android:text="Add Hajji XLSX"
+        android:layout_marginTop="250dp"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:layout_marginRight="15dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/addSerialAndBus"
+        android:text="Add Serial, Bus XLSX"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btnViewSDCard"/>
+    <Button
+        android:layout_marginRight="15dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/updateState"
+        android:text="Update State XLSX"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/addSerialAndBus"/>
+    <Button
+        android:layout_marginLeft="15dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/back"
+        android:text="Back"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/updateState"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="to update add serial and bus\n| Serial | Bus | Passport |\n\n\nto update state\n| Passport | State |\n 0 : not arrived\n 1 : Makkah\n 2 : Madina\n 3 : Death\n 4 : Final"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/context"
+        android:layout_below="@id/back"
+        android:gravity="center_horizontal"/>
+</RelativeLayout>

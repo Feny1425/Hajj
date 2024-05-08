@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Hajj</string>
+    <string-array name="search">
+        <item>maktab:</item>
+        <item>unit:</item>
+        <item>flight:</item>
+        <item>guide:</item>
+        <item>name:</item>
+        <item>passport:</item>
+        <item>serial:</item>
+        <item>bus:</item>
+        <item>house:</item>
+    </string-array>
+    <string-array name="states">
+        <item>not Arrived</item>
+        <item>Makkah</item>
+        <item>Madina</item>
+        <item>Death</item>
+        <item>Final</item>
+    </string-array>
+    <string name="state_1">not Arrived</string>
+    <string name="state_2">Makkah</string>
+    <string name="state_3">Madina</string>
+    <string name="state_4">Death</string>
+    <string name="state_5">Final</string>
+</resources>
