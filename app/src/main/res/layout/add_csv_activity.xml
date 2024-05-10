@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="to update add serial and bus\n| Serial | Bus | Passport |\n\n\nto update state\n| Passport | State |\n 0 : not arrived\n 1 : Makkah\n 2 : Madina\n 3 : Death\n 4 : Final"
+        android:text="to update add serial and bus\n| Serial | Bus | Passport |\n\n\nto update state\n| State | Passport |\n 0 : not arrived\n 1 : Makkah\n 2 : Madina\n 3 : Death\n 4 : Final\n 5 : Mission\n 6 : not coming"
         android:gravity="center_horizontal" />
     <TextView
         android:layout_width="match_parent"

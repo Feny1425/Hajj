@@ -6,6 +6,7 @@ import static feny.job.hajj.Data.MADINA;
 import static feny.job.hajj.Data.MAKKAH;
 import static feny.job.hajj.Data.MISSION;
 import static feny.job.hajj.Data.NOT_ARRIVED;
+import static feny.job.hajj.Data.NOT_COMING;
 
 public class Hajji {
     String SI;
@@ -51,7 +52,7 @@ public class Hajji {
         this.State = state;
     }
     public void nextState(){
-        if(State == 5){
+        if(State == 6){
             State = 0;
         }
         else {
@@ -72,6 +73,8 @@ public class Hajji {
                 return "Final";
             case MISSION:
                 return "Mission";
+            case NOT_COMING:
+                return "Not Coming";
         }
 
     }

@@ -13,10 +13,18 @@
         android:imeOptions="actionDone"
         android:layout_marginBottom="16dp"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:scrollbars="horizontal"
+        android:orientation="horizontal"
+        android:layout_below="@id/searchEditText"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_below="@id/searchEditText"
+        android:layout_below="@id/searchRecycleView"
         android:id="@+id/data_summary"
         android:text="Makkah: 1000, Madina: 2333, Deaths: 0001, Final 4500,\nTotal:9999"/>
 

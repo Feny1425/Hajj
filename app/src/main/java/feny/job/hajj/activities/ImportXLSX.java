@@ -58,8 +58,6 @@ public class ImportXLSX extends AppCompatActivity {
     private void start() {
         context = ((TextView)findViewById(R.id.context));
         findViewById(R.id.back).setOnClickListener(view -> {
-            Intent intent = new Intent(this, HajjiListActivity.class);
-            startActivity(intent);
             finish();
         });
         findViewById(R.id.btnViewSDCard).setOnClickListener(view -> {
@@ -68,7 +66,7 @@ public class ImportXLSX extends AppCompatActivity {
         findViewById(R.id.addSerialAndBus).setOnClickListener(view -> {
             openFile(105);
         });
-        findViewById(R.id.addSerialAndBus).setOnClickListener(view -> {
+        findViewById(R.id.updateState).setOnClickListener(view -> {
             openFile(110);
         });
     }
@@ -77,7 +75,7 @@ public class ImportXLSX extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if(Environment.isExternalStorageManager()){
                 Intent intent = new Intent()
-                        .setType("*/*")
+                        .setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                         .setAction(Intent.ACTION_GET_CONTENT);
                 intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -151,9 +149,9 @@ public class ImportXLSX extends AppCompatActivity {
         ArrayList<Hajji> updatedHajjis = new ArrayList<>();
         for (Row row : sheet) {
             if (row.getRowNum() < 1) continue;
-            Hajji hajji = getHajjiByPassport(hajjis,row.getCell(0).getStringCellValue());
+            Hajji hajji = getHajjiByPassport(hajjis,row.getCell(1).getStringCellValue());
             if(hajji == null) continue;
-            Cell cell = row.getCell(1);
+            Cell cell = row.getCell(0);
             hajji.setState((int)cell.getNumericCellValue());
             updatedHajjis.add(hajji);
         }

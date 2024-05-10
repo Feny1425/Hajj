@@ -1,11 +1,13 @@
 package feny.job.hajj.activities;
 
+import static feny.job.hajj.Data.CAN_EDIT;
 import static feny.job.hajj.Data.DEATH;
 import static feny.job.hajj.Data.FINAL;
 import static feny.job.hajj.Data.MADINA;
 import static feny.job.hajj.Data.MAKKAH;
 import static feny.job.hajj.Data.MISSION;
 import static feny.job.hajj.Data.NOT_ARRIVED;
+import static feny.job.hajj.Data.NOT_COMING;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,7 +44,6 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -50,19 +51,26 @@ import java.util.Map;
 import java.util.Set;
 
 import feny.job.hajj.CaptureAct;
+import feny.job.hajj.Data;
 import feny.job.hajj.Hajji;
-import feny.job.hajj.HajjiAdapter;
+import feny.job.hajj.adapters.HajjiAdapter;
 import feny.job.hajj.HajjiExcelExporter;
 import feny.job.hajj.R;
 import feny.job.hajj.Utils.DateUtils;
+import feny.job.hajj.adapters.SearchAdapter;
 
 public class HajjiListActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,searchRecyclerView;
     private AutoCompleteTextView searchEditText;
+    private List<Hajji> ORIGINALhajjiList = new ArrayList<>();
     private List<Hajji> hajjiList = new ArrayList<>();
     private List<Hajji> hajjiListFILTERED = new ArrayList<>();
     private HajjiAdapter hajjiAdapter;
+
+    private static Set<String> searchList = new HashSet<>();
+
+    private SearchAdapter searchAdapter;
 
     private TextView summary;
 
@@ -72,6 +80,7 @@ public class HajjiListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hajji_list);
 
         recyclerView = findViewById(R.id.recyclerView);
+        searchRecyclerView = findViewById(R.id.searchRecycleView);
         searchEditText = findViewById(R.id.searchEditText);
         summary = findViewById(R.id.data_summary);
 
@@ -82,8 +91,12 @@ public class HajjiListActivity extends AppCompatActivity {
         }
         else retrieve();
 
-        hajjiAdapter = new HajjiAdapter(this, hajjiList);
+
+        hajjiAdapter = new HajjiAdapter(this, ORIGINALhajjiList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        searchAdapter = new SearchAdapter(this);
+        searchRecyclerView.setAdapter(searchAdapter);
         recyclerView.setAdapter(hajjiAdapter);
         getSummary();
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -98,7 +111,6 @@ public class HajjiListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                filter(searchEditText.getText().toString());
             }
         });
         searchEditText.setOnLongClickListener(view -> {
@@ -107,25 +119,32 @@ public class HajjiListActivity extends AppCompatActivity {
         });
     }
 
+    public static void addSearch(String s){
+        searchList.add(s);
+    }
 
 
+    public void removeSearch(String s){
+        searchList.remove(s);
+        retrieve();
+        getSummary();
+    }
     private void retrieve() {
-        hajjiList = retrieveHajjiListFromLocalStorage(this);
-        hajjiListFILTERED = retrieveHajjiListFromLocalStorage(this);
-        if (hajjiList.size() > 0) {
+        ORIGINALhajjiList = retrieveHajjiListFromLocalStorage(this);
+        hajjiListFILTERED = new ArrayList<>(ORIGINALhajjiList);
+        hajjiList = new ArrayList<>(ORIGINALhajjiList);
 
-            String hajjisJson = getIntent().getStringExtra("hajjisJson");
-
-            // Convert JSON string back to a list of Hajji objects using Gson
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<Hajji>>() {
-            }.getType();
-            List<Hajji> hajjiList2 = gson.fromJson(hajjisJson, listType);
-            if (hajjiList2 != null) hajjiList = hajjiList2;
-        }
         String[] searches = SearchesSuggest();
         ArrayAdapter searchAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, searches);
         searchEditText.setAdapter(searchAdapter);
+
+        if(searchList.isEmpty()){
+            filter("");
+        }else {
+            for(String search : searchList){
+                filter(search+"-");
+            }
+        }
 
     }
 
@@ -139,7 +158,7 @@ public class HajjiListActivity extends AppCompatActivity {
                 searches[i] = arraySearch[i];
             }
             else {
-                searches[i] = suggestions.get(i-arraySearch.length);
+                searches[i] = suggestions.get(i-arraySearch.length)+"-";
             }
         }
         return searches;
@@ -151,10 +170,13 @@ public class HajjiListActivity extends AppCompatActivity {
             suggestions.add("passport: " + hajji.getPassport());
             suggestions.add("house: " + hajji.getHouseNumber());
             suggestions.add("guide: " + hajji.getGuide());
-            suggestions.add("name: " + hajji.getName());
+            suggestions.add("name:" + hajji.getName());
             suggestions.add("unit: " + hajji.getUnit());
             suggestions.add("maktab: " + hajji.getUnit());
+            suggestions.add("bus: " + hajji.getBus());
+            suggestions.add("state: " + hajji.getStateName());
         }
+
         return suggestions;
     }
     public static ArrayList<Hajji> retrieveHajjiListFromLocalStorage(Context context) {
@@ -180,60 +202,80 @@ public class HajjiListActivity extends AppCompatActivity {
 
     private void filter(String searchText) {
         List<Hajji> filteredList = new ArrayList<>();
+
         for (Hajji hajji : hajjiList) {
-            // Implement your filtering logic based on name, passport, group, guide, flight, unit, maktab
 
             if (searchText.toLowerCase().contains("maktab:")) {
-                String search = searchText.replace("maktab:", "").replace(" ", "");
+                String search = searchText.replace("maktab:", "").replace(" ", "").replace("-", "");
                 if (String.valueOf(hajji.getMaktabNumber()).contains(search)) {
                     filteredList.add(hajji);
                 }
             } else if (searchText.toLowerCase().contains("unit:")) {
-                String search = searchText.replace("unit:", "").replace(" ", "");
+                String search = searchText.replace("unit:", "").replace(" ", "").replace("-", "");
                 if (String.valueOf(hajji.getUnit()).contains(search)) {
                     filteredList.add(hajji);
                 }
             } else if (searchText.toLowerCase().contains("flight:")) {
-                String search = searchText.replace("flight:", "").replace(" ", "");
+                String search = searchText.replace("flight:", "").replace(" ", "").replace("-", "");
                 if (String.valueOf(hajji.getFlight()).contains(search)) {
                     filteredList.add(hajji);
                 }
             } else if (searchText.toLowerCase().contains("guide:")) {
-                String search = searchText.replace("guide:", "").replace(" ", "");
+                String search = searchText.replace("guide:", "").replace(" ", "").replace("-", "");
                 if (String.valueOf(hajji.getGuide()).contains(search)) {
                     filteredList.add(hajji);
                 }
             } else if (searchText.toLowerCase().contains("name:")) {
-                String search = searchText.replace("name:", "");
+                String search = searchText.replace("name:", "").replace("-", "");
                 if (String.valueOf(hajji.getName()).contains(search)) {
                     filteredList.add(hajji);
                 }
             } else if (searchText.toLowerCase().contains("passport:")) {
-                String search = searchText.replace("passport:", "").replace(" ", "");
+                String search = searchText.replace("passport:", "").replace(" ", "").replace("-", "");
                 if (String.valueOf(hajji.getPassport()).contains(search)) {
                     filteredList.add(hajji);
                 }
             } else if (searchText.toLowerCase().contains("serial:")) {
-                String search = searchText.replace("serial:", "");
-                if (String.valueOf(hajji.getSerial()).contains(search)) {
+                String search = searchText.replace("serial:", "").replace(" ", "").replace("-", "");
+                if (String.valueOf(hajji.getSerial()).equals(search)) {
                     filteredList.add(hajji);
                 }
-            }else if (searchText.toLowerCase().contains("bus:")) {
-                String search = searchText.replace("bus:", "");
-                if (String.valueOf(hajji.getBus()).contains(search)) {
+            } else if (searchText.toLowerCase().contains("bus:")) {
+                String search = searchText.replace("bus:", "").replace(" ", "").replace("-", "");
+                if (String.valueOf(hajji.getBus()).equals(  search)) {
                     filteredList.add(hajji);
                 }
-            }else if (searchText.toLowerCase().contains("house:")) {
-                String search = searchText.replace("house:", "");
+            } else if (searchText.toLowerCase().contains("house:")) {
+                String search = searchText.replace("house:", "").replace(" ", "").replace("-", "");
                 if (String.valueOf(hajji.getHouseNumber()).contains(search)) {
+                    filteredList.add(hajji);
+                }
+            } else if (searchText.toLowerCase().contains("state:")) {
+                String search = searchText.replace("state:", "").replace(" ", "").replace("-", "");
+                if (String.valueOf(hajji.getStateName()).toLowerCase().replace(" ","").contains(search.toLowerCase())) {
                     filteredList.add(hajji);
                 }
             } else if (hajji.getPassport().toLowerCase().contains(searchText.toLowerCase().replace(" ", ""))) {
                 filteredList.add(hajji);
             }
+
         }
         hajjiAdapter.filterList(filteredList);
-        hajjiListFILTERED = filteredList;
+        hajjiAdapter.notifyDataSetChanged();
+        if (searchText.contains("-")) {
+            String text = searchText.split("-")[0];
+            searchAdapter.addSearch(text);
+            searchList.add(text);
+            hajjiList = filteredList;
+            searchEditText.setText("");
+            getSummary();
+
+            String[] searches = SearchesSuggest();
+            ArrayAdapter searchAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, searches);
+            searchEditText.setAdapter(searchAdapter);
+        }
+        hajjiListFILTERED = new ArrayList<>(filteredList);
+
     }
 
     private void retrieveHajjiFromFirebaseAndSaveLocally(Context context) {
@@ -278,11 +320,11 @@ public class HajjiListActivity extends AppCompatActivity {
             List<Hajji> hajjiList2 = gson.fromJson(hajjisJson, listType);
             if (hajjiList2 != null) hajjiList = hajjiList2;
 
-            hajjiAdapter = new HajjiAdapter(this, hajjiList);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(hajjiAdapter);
+            ORIGINALhajjiList = new ArrayList<>( hajjiList);
             Toast.makeText(this,"Done Checking for data changes",Toast.LENGTH_SHORT).show();
         }
+        retrieve();
+        getSummary();
     }
 
     private void saveHajjiLocally(Context context, Hajji hajji) {
@@ -325,10 +367,31 @@ public class HajjiListActivity extends AppCompatActivity {
        if(result.getContents() != null){
            int length = result.getContents().length();
            if(length > 7){
-               searchEditText.setText("passport:"+result.getContents());
+               Hajji hajji = Data.getHajjiByPassport(ORIGINALhajjiList, result.getContents());
+               if(hajji != null) {
+                   Gson gson = new Gson();
+                   // Launch detail activity with Hajji data
+                   Intent intent = new Intent(this, HajjiDetailActivity.class);
+                   intent.putExtra("hajji", gson.toJson(hajji));
+                   startActivity(intent);
+               }
+               else {
+                   searchEditText.setText("passport:"+result.getContents());
+               }
            }
            else {
-               searchEditText.setText("serial:"+result.getContents());
+               String res = result.getContents().replaceFirst("^0+(?!$)", "");
+               Hajji hajji = Data.getHajjiBySerial(ORIGINALhajjiList, res);
+               if(hajji != null) {
+                   Gson gson = new Gson();
+                   // Launch detail activity with Hajji data
+                   Intent intent = new Intent(this, HajjiDetailActivity.class);
+                   intent.putExtra("hajji", gson.toJson(hajji));
+                   startActivity(intent);
+               }
+               else {
+                   searchEditText.setText("serial:"+res);
+               }
            }
        }
     });
@@ -339,22 +402,21 @@ public class HajjiListActivity extends AppCompatActivity {
     private void showOptionsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose an option");
-        String[] options = {"Update XLSX", "Export XLSX"}; // Customize the options as needed
+        String[] options = CAN_EDIT? new String[]{"Export XLSX", "Update XLSX" } : new String[]{"Export XLSX"}; // Customize the options as needed
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0:
+                    case 1:
                         if(checkConnectivity()) {
                             Intent intent = new Intent(HajjiListActivity.this, ImportXLSX.class);
                             startActivity(intent);
-                            finish();
                         }
                         else {
                             Toast.makeText(HajjiListActivity.this,"No internet Connection",Toast.LENGTH_SHORT).show();
                         }
                         break;
-                    case 1:
+                    case 0:
                         String name = "Hajj_"+ DateUtils.getCurrentDateTime() +"_exported.xlsx";
                         if(HajjiExcelExporter.exportToExcel(HajjiListActivity.this,hajjiListFILTERED, name)){
                             Toast.makeText(HajjiListActivity.this,"Done File in\n/Documents/"+name,Toast.LENGTH_SHORT).show();
@@ -378,18 +440,16 @@ public class HajjiListActivity extends AppCompatActivity {
         super.onResume();
         retrieve();
         getSummary();
-        hajjiAdapter.filterList(hajjiList);
-        filter(searchEditText.getText().toString());
     }
 
     private void getSummary(){
-        int[] states = new int[6];
+        int[] states = new int[7];
         for(Hajji hajji : hajjiList){
             states[hajji.getState()]++;
         }
-        String summaryText = "NotArrived: "+states[NOT_ARRIVED]+
+        String summaryText = "NotArrived: "+states[NOT_ARRIVED] + ", Not Coming: " + states[NOT_COMING]+
                 ",\nMakkah: "+states[MAKKAH]+", Madina: "+states[MADINA]+", Mission: "+states[MISSION]+", Deaths: "+states[DEATH]+", Final: "+states[FINAL]+
-                ",\nTotal: "+hajjiList.size();
+                ",\nTotal: "+ hajjiList.size() +" - " + states[NOT_COMING] +" = " + (hajjiList.size()-states[NOT_COMING]);
         summary.setText(summaryText);
     }
 }

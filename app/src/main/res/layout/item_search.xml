@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview"
+    android:layout_width="wrap_content"
+    android:layout_height="28dp"
+    card_view:contentPadding="4dp"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="8dp"
+    card_view:cardBackgroundColor="@color/cardview_light_background"
+    android:layout_margin="1dp"
+    >
+
+    <!--Text View over Card View-->
+    <TextView
+        android:id="@+id/filter"
+        android:layout_gravity="center"
+        android:textSize="14sp"
+        android:text="passport: A015794865"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</androidx.cardview.widget.CardView>

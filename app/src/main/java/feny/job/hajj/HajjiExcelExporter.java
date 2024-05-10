@@ -17,40 +17,44 @@ public class HajjiExcelExporter {
         Workbook workbook = new XSSFWorkbook();
         // Create a sheet
         Sheet sheet = workbook.createSheet("Hajji Data");
-
+        int i = 0;
         // Create header row
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("Serial");
-        headerRow.createCell(1).setCellValue("PID");
-        headerRow.createCell(2).setCellValue("Unit");
-        headerRow.createCell(3).setCellValue("Tracking No");
-        headerRow.createCell(4).setCellValue("Name");
-        headerRow.createCell(5).setCellValue("Gender");
-        headerRow.createCell(6).setCellValue("Passport");
-        headerRow.createCell(7).setCellValue("Guide");
-        headerRow.createCell(8).setCellValue("Flight");
-        headerRow.createCell(9).setCellValue("House Number");
-        headerRow.createCell(10).setCellValue("Room Number");
-        headerRow.createCell(11).setCellValue("Bus Number");
-        headerRow.createCell(12).setCellValue("State");
+        headerRow.createCell(i++).setCellValue("SI.");
+        headerRow.createCell(i++).setCellValue("Serial");
+        headerRow.createCell(i++).setCellValue("PID");
+        headerRow.createCell(i++).setCellValue("Unit");
+        headerRow.createCell(i++).setCellValue("Tracking No");
+        headerRow.createCell(i++).setCellValue("Name");
+        headerRow.createCell(i++).setCellValue("Gender");
+        headerRow.createCell(i++).setCellValue("Passport");
+        headerRow.createCell(i++).setCellValue("Guide");
+        headerRow.createCell(i++).setCellValue("Flight");
+        headerRow.createCell(i++).setCellValue("House Number");
+        headerRow.createCell(i++).setCellValue("Room Number");
+        headerRow.createCell(i++).setCellValue("Bus Number");
+        headerRow.createCell(i++).setCellValue("State");
 
         // Populate data rows
         int rowNum = 1;
+        i = 0;
         for (Hajji hajji : hajjiList) {
-            Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(hajji.getSerial());
-            row.createCell(1).setCellValue(hajji.getPID());
-            row.createCell(2).setCellValue(hajji.getUnit());
-            row.createCell(3).setCellValue(hajji.getTrackingNo());
-            row.createCell(4).setCellValue(hajji.getName());
-            row.createCell(5).setCellValue(hajji.isGender() ? "Male" : "Female");
-            row.createCell(6).setCellValue(hajji.getPassport());
-            row.createCell(7).setCellValue(hajji.getGuide());
-            row.createCell(8).setCellValue(hajji.getFlight());
-            row.createCell(9).setCellValue(hajji.getHouseNumber());
-            row.createCell(10).setCellValue(hajji.getRoomNumber());
-            row.createCell(11).setCellValue(hajji.getBus());
-            row.createCell(12).setCellValue(hajji.getStateName());
+            Row row = sheet.createRow(rowNum);
+            row.createCell(i++).setCellValue(rowNum++);
+            row.createCell(i++).setCellValue(hajji.getSerial());
+            row.createCell(i++).setCellValue(hajji.getPID());
+            row.createCell(i++).setCellValue(hajji.getUnit());
+            row.createCell(i++).setCellValue(hajji.getTrackingNo());
+            row.createCell(i++).setCellValue(hajji.getName());
+            row.createCell(i++).setCellValue(hajji.isGender() ? "Male" : "Female");
+            row.createCell(i++).setCellValue(hajji.getPassport());
+            row.createCell(i++).setCellValue(hajji.getGuide());
+            row.createCell(i++).setCellValue(hajji.getFlight());
+            row.createCell(i++).setCellValue(hajji.getHouseNumber());
+            row.createCell(i++).setCellValue(hajji.getRoomNumber());
+            row.createCell(i++).setCellValue(hajji.getBus());
+            row.createCell(i).setCellValue(hajji.getStateName());
+            i = 0;
         }
 
         // Save workbook to file

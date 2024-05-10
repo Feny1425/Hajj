@@ -11,8 +11,8 @@ android {
         applicationId "feny.job.hajj"
         minSdk 26
         targetSdk 34
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,4 +41,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation group: 'org.apache.poi', name: 'poi', version: '3.9'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }

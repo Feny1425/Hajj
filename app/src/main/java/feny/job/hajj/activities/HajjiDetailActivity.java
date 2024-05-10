@@ -1,5 +1,14 @@
 package feny.job.hajj.activities;
 
+import static feny.job.hajj.Data.CAN_EDIT;
+import static feny.job.hajj.Data.DEATH;
+import static feny.job.hajj.Data.FINAL;
+import static feny.job.hajj.Data.MADINA;
+import static feny.job.hajj.Data.MAKKAH;
+import static feny.job.hajj.Data.MISSION;
+import static feny.job.hajj.Data.NOT_ARRIVED;
+import static feny.job.hajj.Data.NOT_COMING;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +16,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -73,21 +83,10 @@ public class HajjiDetailActivity extends AppCompatActivity {
         serialTextView = findViewById(R.id.serialTextView);
         busTextView = findViewById(R.id.busTextView);
 
+        state();
 
-
-            stateTextView.setOnClickListener(view -> {
-                if(checkConnectivity()){
-                    hajji.nextState();
-                    stateTextView.setText("State: " + hajji.getStateName());
-                    uploadHajjiToFirebaseAndSaveLocally();
-            }
-            else {
-                Toast.makeText(this,"No internet Connection",Toast.LENGTH_LONG).show();
-            }
-
-            });
-            serialTextView.setOnClickListener(view -> showSerialNumberInputDialog());
-            busTextView.setOnClickListener(view -> showBusNumberInputDialog());
+        if(CAN_EDIT)
+            edit();
 
 
         unitTextView.setOnClickListener(view -> filterHajjisByUnit());
@@ -95,6 +94,7 @@ public class HajjiDetailActivity extends AppCompatActivity {
         flightTextView.setOnClickListener(view -> filterHajjisByFlight());
         houseNumberTextView.setOnClickListener(view -> filterHajjisByHouse());
         maktabNumberTextView.setOnClickListener(view -> filterHajjisByMaktab());
+        busTextView.setOnClickListener(view -> filterHajjisByBus());
 
 
         if (hajji != null) {
@@ -115,82 +115,74 @@ public class HajjiDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void filterHajjisByMaktab() {
-        List<Hajji> filteredHajjis = new ArrayList<>();
-        for (Hajji hajji : HajjiListActivity.retrieveHajjiListFromLocalStorage(this)) {
-            if (Objects.equals(hajji.getMaktabNumber(), this.hajji.getMaktabNumber())) {
-                filteredHajjis.add(hajji);
+    private void edit() {
+        stateTextView.setOnLongClickListener(view -> {
+                if(checkConnectivity()){
+                    hajji.nextState();
+                    stateTextView.setText("State: " + hajji.getStateName());
+                    state();
+                    uploadHajjiToFirebaseAndSaveLocally();
             }
-        }
-        // Convert the list of Hajjis to JSON using Gson
-        String hajjisJson = gson.toJson(filteredHajjis);
+            else {
+                Toast.makeText(this,"No internet Connection",Toast.LENGTH_LONG).show();
+            }
+                return false;
+            });
+        serialTextView.setOnLongClickListener(view -> {showSerialNumberInputDialog();
+            return false;
+        });
+        busTextView.setOnLongClickListener(view -> {showBusNumberInputDialog();
+            return false;
+        });
+    }
 
-        sendData(hajjisJson);
+    private void state() {
+        switch (hajji.getState()){
+            case NOT_COMING :
+            case DEATH:
+                stateTextView.setTextColor(Color.RED); break;
+            case NOT_ARRIVED: stateTextView.setTextColor(Color.GRAY); break;
+            case MAKKAH: stateTextView.setTextColor(Color.WHITE); break;
+            case MADINA: stateTextView.setTextColor(Color.LTGRAY); break;
+            case FINAL:  stateTextView.setTextColor(Color.GREEN); break;
+            case MISSION:  stateTextView.setTextColor(Color.BLUE); break;
+        }
+    }
+
+    private void filterHajjisByMaktab() {
+        HajjiListActivity.addSearch("maktab: "+hajji.getMaktabNumber());
+        sendData();
     }
 
 
     private void filterHajjisByHouse() {
-        List<Hajji> filteredHajjis = new ArrayList<>();
-        for (Hajji hajji : HajjiListActivity.retrieveHajjiListFromLocalStorage(this)) {
-            if (Objects.equals(hajji.getHouseNumber(), this.hajji.getHouseNumber())) {
-                filteredHajjis.add(hajji);
-            }
-        }
-        // Convert the list of Hajjis to JSON using Gson
-        String hajjisJson = gson.toJson(filteredHajjis);
-
-        // Pass the JSON string to HajjiListActivity
-        sendData(hajjisJson);
+        HajjiListActivity.addSearch("house: "+hajji.getHouseNumber());
+        sendData();
     }
 
     private void filterHajjisByFlight() {
-        List<Hajji> filteredHajjis = new ArrayList<>();
-        for (Hajji hajji : HajjiListActivity.retrieveHajjiListFromLocalStorage(this)) {
-            if (Objects.equals(hajji.getFlight(), this.hajji.getFlight())) {
-                filteredHajjis.add(hajji);
-            }
-        }
-        // Convert the list of Hajjis to JSON using Gson
-        String hajjisJson = gson.toJson(filteredHajjis);
-
-        // Pass the JSON string to HajjiListActivity
-        sendData(hajjisJson);
+        HajjiListActivity.addSearch("flight: "+hajji.getFlight());
+        sendData();
     }
 
     private void filterHajjisByGuide() {
-        List<Hajji> filteredHajjis = new ArrayList<>();
-        for (Hajji hajji : HajjiListActivity.retrieveHajjiListFromLocalStorage(this)) {
-            if (Objects.equals(hajji.getGuide(), this.hajji.getGuide())) {
-                filteredHajjis.add(hajji);
-            }
-        }
-        // Convert the list of Hajjis to JSON using Gson
-        String hajjisJson = gson.toJson(filteredHajjis);
-
-        // Pass the JSON string to HajjiListActivity
-        sendData(hajjisJson);
+        HajjiListActivity.addSearch("guide: "+hajji.getGuide());
+        sendData();
     }
 
     // Inside HajjiDetailActivity
     private void filterHajjisByUnit() {
-        List<Hajji> filteredHajjis = new ArrayList<>();
-        for (Hajji hajji : HajjiListActivity.retrieveHajjiListFromLocalStorage(this)) {
-            if (hajji.getUnit() == this.hajji.getUnit()) {
-                filteredHajjis.add(hajji);
-            }
-        }
-        // Convert the list of Hajjis to JSON using Gson
-        String hajjisJson = gson.toJson(filteredHajjis);
-
-        // Pass the JSON string to HajjiListActivity
-        sendData(hajjisJson);
+        HajjiListActivity.addSearch("unit: "+hajji.getUnit());
+        sendData();
+    }
+    private void filterHajjisByBus() {
+        HajjiListActivity.addSearch("flight: "+hajji.getFlight());
+        HajjiListActivity.addSearch("bus: "+hajji.getBus());
+        sendData();
     }
 
-    private void sendData(String hajjisJson) {
-        // Pass the JSON string to HajjiListActivity
-        Intent intent = new Intent(HajjiDetailActivity.this, HajjiListActivity.class);
-        intent.putExtra("hajjisJson", hajjisJson);
-        startActivity(intent);
+    private void sendData() {
+        finish();
     }
 
 

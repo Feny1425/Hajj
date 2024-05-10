@@ -10,6 +10,7 @@
         <item>serial:</item>
         <item>bus:</item>
         <item>house:</item>
+        <item>state:</item>
     </string-array>
     <string-array name="states">
         <item>not Arrived</item>
@@ -17,6 +18,8 @@
         <item>Madina</item>
         <item>Death</item>
         <item>Final</item>
+        <item>Mission</item>
+        <item>not Coming</item>
     </string-array>
     <string name="state_1">not Arrived</string>
     <string name="state_2">Makkah</string>

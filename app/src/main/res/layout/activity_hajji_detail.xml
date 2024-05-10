@@ -36,6 +36,12 @@
         android:textSize="20sp"/>
 
     <TextView
+        android:id="@+id/guideTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guide: "
+        android:textSize="20sp"/>
+    <TextView
         android:id="@+id/genderTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,12 +55,6 @@
         android:text="Phone Number: "
         android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/guideTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Guide: "
-        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/flightTextView"
@@ -84,12 +84,6 @@
         android:text="Maktab Number: "
         android:textSize="20sp"/>
     <TextView
-        android:id="@+id/stateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="State: "
-        android:textSize="20sp"/>
-    <TextView
         android:id="@+id/busTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,6 +96,12 @@
         android:text="Serial: "
         android:textSize="20sp"/>
 
+    <TextView
+        android:id="@+id/stateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="State: "
+        android:textSize="20sp"/>
     <!-- Add more TextViews for displaying other details of Hajji -->
 
 </LinearLayout>
