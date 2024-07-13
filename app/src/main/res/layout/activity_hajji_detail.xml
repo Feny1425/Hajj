@@ -29,18 +29,60 @@
         android:textSize="20sp"/>
 
     <TextView
+        android:id="@+id/visaTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Visa: "
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/codeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Code: "
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/flightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Flight: "
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/busTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bus: "
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/unitTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Unit: "
-        android:textSize="20sp"/>
-
+        android:textSize="20sp" />
     <TextView
-        android:id="@+id/guideTextView"
+        android:id="@+id/pidTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Guide: "
-        android:textSize="20sp"/>
+        android:text="PID: "
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/houseNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="House Number: "
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/roomNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Room Number: "
+        android:textSize="20sp" />
+
     <TextView
         android:id="@+id/genderTextView"
         android:layout_width="wrap_content"
@@ -48,34 +90,6 @@
         android:text="Gender: "
         android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/phoneNumberTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone Number: "
-        android:textSize="20sp"/>
-
-
-    <TextView
-        android:id="@+id/flightTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Flight: "
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/houseNumberTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="House Number: "
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/roomNumberTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Room Number: "
-        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/maktabNumberTextView"
@@ -83,12 +97,14 @@
         android:layout_height="wrap_content"
         android:text="Maktab Number: "
         android:textSize="20sp"/>
+
     <TextView
-        android:id="@+id/busTextView"
+        android:id="@+id/guideTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bus: "
-        android:textSize="20sp"/>
+        android:text="Guide: "
+        android:textSize="20sp" />
+
     <TextView
         android:id="@+id/serialTextView"
         android:layout_width="wrap_content"
@@ -96,12 +112,26 @@
         android:text="Serial: "
         android:textSize="20sp"/>
 
+
     <TextView
         android:id="@+id/stateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="State: "
         android:textSize="20sp"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Came To Makkah"
+        android:clickable="false"
+        android:id="@+id/makkah"/>
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="in hospital"
+        android:clickable="false"
+        android:id="@+id/ill"/>
+
     <!-- Add more TextViews for displaying other details of Hajji -->
 
 </LinearLayout>

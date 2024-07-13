@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#C8A2C8</color> <!-- Muted Gold -->
+    <color name="colorPrimaryDark">#AA8F00</color> <!-- Darker Gold -->
+    <color name="backgroundColor">#FFFFFF</color> <!-- White Background -->
+    <color name="textColorPrimary">#000000</color> <!-- Black Text -->
+    <color name="buttonTextColor">#FFFFFF</color> <!-- White Button Text -->
+    <color name="accentColor">#FFC107</color> <!-- Accent color for highlights -->
 </resources>

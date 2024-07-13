@@ -1,4 +1,6 @@
 package feny.job.hajj.adapters;
+import static feny.job.hajj.activities.HajjiListActivity.getSearchList;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,25 +20,12 @@ import feny.job.hajj.activities.HajjiListActivity;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     // List with String type
-    private List<String> list;
-
-    public List<String> getList() {
-        return list;
-    }
     private HajjiListActivity hajjiListActivity;
-
-    public void addSearch(String s){
-        if(!list.contains(s))list.add(s);
-    }
-    public void setSearch(ArrayList<String> s){
-        list = new ArrayList<>(s);
-    }
 
     // Constructor for adapter class
     // which takes a list of String type
     public SearchAdapter(HajjiListActivity hajjiListActivity)
     {
-        this.list = new ArrayList<>();
         this.hajjiListActivity = hajjiListActivity;
     }
 
@@ -50,7 +39,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String s = list.get(position);
+        String s = getSearchList().get(position);
         holder.bind(s);
     }
 
@@ -80,8 +69,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public void onClick(View view) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
-                hajjiListActivity.removeSearch(list.get(position));
-                list.remove(position);
+                hajjiListActivity.removeSearch(getSearchList().get(position));
                 notifyItemRemoved(position);
             } else {
                 // Handle the case where the position is invalid
@@ -95,6 +83,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public int getItemCount()
     {
-        return list.size();
+        return getSearchList().size();
     }
 }

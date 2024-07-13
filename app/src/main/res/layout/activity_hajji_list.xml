@@ -11,7 +11,14 @@
         android:hint="Search by name, passport, group, guide, flight, unit, maktab"
         android:inputType="text"
         android:imeOptions="actionDone"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="3dp"/>
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoCheck"
+        android:text="Auto Check"
+        android:layout_below="@id/searchEditText"
+        android:layout_marginBottom="8dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecycleView"
@@ -19,11 +26,12 @@
         android:layout_height="28dp"
         android:scrollbars="horizontal"
         android:orientation="horizontal"
-        android:layout_below="@id/searchEditText"/>
+        android:layout_below="@id/autoCheck"
+        />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/searchRecycleView"
         android:id="@+id/data_summary"
         android:text="Makkah: 1000, Madina: 2333, Deaths: 0001, Final 4500,\nTotal:9999"/>

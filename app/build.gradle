@@ -11,8 +11,8 @@ android {
         applicationId "feny.job.hajj"
         minSdk 26
         targetSdk 34
-        versionCode 4
-        versionName "1.5"
+        versionCode 6
+        versionName "4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'org.apache.poi:poi:5.2.4'
