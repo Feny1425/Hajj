@@ -1,5 +1,7 @@
 package feny.job.hajj.custom;
 
+import static feny.job.hajj.custom.Data.MAKKAH;
+import static feny.job.hajj.custom.Data.MAKTAB;
 import static feny.job.hajj.custom.Data.getHajjiDB;
 import static feny.job.hajj.custom.Data.hajjis;
 

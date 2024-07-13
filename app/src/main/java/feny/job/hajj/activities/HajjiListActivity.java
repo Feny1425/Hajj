@@ -4,6 +4,7 @@ import static feny.job.hajj.custom.Data.DEATH;
 import static feny.job.hajj.custom.Data.FINAL;
 import static feny.job.hajj.custom.Data.MADINA;
 import static feny.job.hajj.custom.Data.MAKKAH;
+import static feny.job.hajj.custom.Data.MAKTAB;
 import static feny.job.hajj.custom.Data.MISSION;
 import static feny.job.hajj.custom.Data.NOT_ARRIVED;
 import static feny.job.hajj.custom.Data.NOT_COMING;
@@ -190,6 +191,7 @@ public class HajjiListActivity extends AppCompatActivity implements Storage.Chan
                             } else {
                                 hajjiAdapter.filterList(new ArrayList<>(hajjis.getHajjis()));
                                 hajjiAdapter.notifyDataSetChanged();
+                                filter("");
                             }
                         } catch (Exception e) {
                             Log.e(TAG, "retrieve (UI update): " + e.getMessage());
@@ -253,8 +255,10 @@ public class HajjiListActivity extends AppCompatActivity implements Storage.Chan
             boolean neg = searchText.toLowerCase().startsWith("not:");
             searchText = searchText.replace("not:","");
             for (Hajji hajji : hajjiList) {
-
-                if (searchText.toLowerCase().contains("maktab:")) {
+                if(MAKTAB != -1 && MAKTAB != hajji.getMaktabNumber()) {
+                    continue;
+                }
+                    if (searchText.toLowerCase().contains("maktab:")) {
                     String search = searchText.replace("maktab:", "").replace(" ", "").replace("-", "");
                     if (neg ^ String.valueOf(hajji.getMaktabNumber()).contains(search)) {
                         filteredList.add(hajji);
@@ -497,15 +501,19 @@ public class HajjiListActivity extends AppCompatActivity implements Storage.Chan
 
     private void getSummary(){
         int[] states = new int[7];
-        int[] gender = new int[2];
+        int[] gender = new int[3];
         for(Hajji hajji : hajjiList){
+            if(MAKTAB != -1 && MAKTAB != hajji.getMaktabNumber()) {
+                continue;
+            }
             states[hajji.getState()]++;
+            gender[2]++;
             gender[hajji.isGender()?0:1]++;
         }
         String summaryText = "NotArrived: "+states[NOT_ARRIVED] + ", Not Coming: " + states[NOT_COMING]+", Deaths: "+states[DEATH]+
                 ",\nMakkah: "+states[MAKKAH]+", Madina: "+states[MADINA]+", Mission: "+states[MISSION]+ ",Final: "+states[FINAL]+
                 "\nMale: " + gender[0] + ",Female: " + gender[1]+
-                ",\nTotal: "+ hajjiList.size() +" - " + states[NOT_COMING] +" - " + states[DEATH] + " = " + (hajjiList.size()-states[NOT_COMING]-states[DEATH]);
+                ",\nTotal: "+  gender[2] +" - " + states[NOT_COMING] +" - " + states[DEATH] + " = " + (gender[2]-states[NOT_COMING]-states[DEATH]);
         try {
             summary.setText(summaryText);
         }

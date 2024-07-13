@@ -7,6 +7,7 @@ import static feny.job.hajj.custom.Network.checkConnectivity;
 import static feny.job.hajj.custom.Storage.retrieveHajjiFromFirebaseAndSaveLocally;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import feny.job.hajj.R;
+import feny.job.hajj.custom.Data;
 import feny.job.hajj.database.HajjiDatabase;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "onCreate: " + e.getMessage());
             }
         }
-
+        SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
+        int _savedOfficeNumber = sharedPreferences.getInt("office_number", -1);
+        Data.MAKTAB = _savedOfficeNumber;
 
     }
 
@@ -81,12 +85,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buttons() {
-        buttonUpdateData.setVisibility(CAN_EDIT?View.VISIBLE:View.GONE);
-        buttonHajjiList.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, HajjiListActivity.class)));
+        try {
 
-        //buttonSettings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
+            buttonUpdateData.setVisibility(CAN_EDIT?View.VISIBLE:View.GONE);
+            buttonHajjiList.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, HajjiListActivity.class)));
 
-        buttonUpdateData.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, UpdateDataActivity.class)));
+            buttonSettings.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
+
+            buttonUpdateData.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, UpdateDataActivity.class)));
+        }
+        catch (Exception e){
+            Log.e(TAG, "buttons: " + e.getMessage() );
+        }
     }
 
     private void ini() {

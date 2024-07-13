@@ -57,7 +57,15 @@ public class Hajji{
     @ColumnInfo(name = "gender")
     boolean Gender = false;
     private boolean checked;
+    private boolean ourOffice;
 
+    public boolean isOurOffice() {
+        return ourOffice;
+    }
+
+    public void setOurOffice(boolean ourOffice) {
+        this.ourOffice = ourOffice;
+    }
 
     public Hajji() {
         // Default constructor required by Firebase

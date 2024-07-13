@@ -35,6 +35,7 @@
             tools:replace="android:screenOrientation" />
 
         <activity android:name=".activities.HajjiListActivity"/>
+        <activity android:name=".activities.SettingsActivity"/>
 
         <activity android:name=".activities.UpdateDataActivity" />
 
